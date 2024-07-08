@@ -4,8 +4,8 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
 	"github.com/lxn/win"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 var IActivationFactoryID = ole.NewGUID("{00000035-0000-0000-C000-000000000046}")

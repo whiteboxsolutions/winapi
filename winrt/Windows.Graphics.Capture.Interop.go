@@ -4,8 +4,8 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
 	"github.com/lxn/win"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 // IGraphicsCptureItemInterop

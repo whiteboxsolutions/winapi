@@ -3,7 +3,7 @@ package winrt
 import (
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 // IDirect3DDevice

@@ -3,9 +3,9 @@ package winapi
 import (
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
 	"github.com/lxn/win"
 	"github.com/moutend/go-wca/pkg/wca"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 type IID ole.GUID

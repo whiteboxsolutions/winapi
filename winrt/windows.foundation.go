@@ -4,8 +4,8 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
 	"github.com/lxn/win"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 var IClosableID = ole.NewGUID("{30D5A829-7FA4-4026-83BB-D75BAE4EA99E}")

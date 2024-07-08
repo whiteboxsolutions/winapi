@@ -3,7 +3,7 @@ package dx11
 import (
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 var IDXGIObjectID = ole.NewGUID("{aec22fb8-76f3-4639-9be0-28eb43a67a2e}")

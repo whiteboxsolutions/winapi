@@ -4,8 +4,8 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
 	"github.com/lxn/win"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 // GraphicsCaptureItemClass
@@ -17,6 +17,10 @@ var GraphicsCaptureItemClass = "Windows.Graphics.Capture.GraphicsCaptureItem"
 
 var IGraphicsCaptureItemID = ole.NewGUID("{79c3f95b-31f7-4ec2-a464-632ef5d30760}")
 var IGraphicsCaptureItemClass = "Windows.Graphics.Capture.IGraphicsCaptureItem"
+
+type TimeSpan struct {
+	Duration int64
+}
 
 type IGraphicsCaptureItem struct {
 	ole.IInspectable
@@ -125,6 +129,7 @@ type Direct3D11CaptureFramePoolFrameArrivedProcType func(this *uintptr, sender *
 
 /*
 eventHandler:
+
 	interface {
 		IUnknown
 		Invoke(sender *IDirect3D11CaptureFramePool, args *ole.IInspectable) uintptr
@@ -312,11 +317,39 @@ type IDirect3D11CaptureFrame struct {
 
 type IDirect3D11CaptureFrameVtbl struct {
 	ole.IInspectableVtbl
-	Surface            uintptr
-	SystemRelativeTime uintptr
-	ContentSize        uintptr
+	Surface                uintptr
+	SystemRelativeTime     uintptr
+	ContentSize            uintptr
+	Get_Surface            uintptr
+	Get_SystemRelativeTime uintptr
+	Get_ContentSize        uintptr
 }
 
 func (v *IDirect3D11CaptureFrame) VTable() *IDirect3D11CaptureFrameVtbl {
 	return (*IDirect3D11CaptureFrameVtbl)(unsafe.Pointer(v.RawVTable))
+}
+
+func (v *IDirect3D11CaptureFrame) Vtbl() *IDirect3D11CaptureFrameVtbl {
+	return (*IDirect3D11CaptureFrameVtbl)(unsafe.Pointer(v.IUnknown.LpVtbl))
+}
+
+func (v *IDirect3D11CaptureFrame) Get_Surface() unsafe.Pointer {
+	var _result unsafe.Pointer
+	_hr, _, _ := syscall.SyscallN(v.Vtbl().Get_Surface, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_ = _hr
+	return _result
+}
+
+func (v *IDirect3D11CaptureFrame) Get_SystemRelativeTime() TimeSpan {
+	var _result TimeSpan
+	_hr, _, _ := syscall.SyscallN(v.Vtbl().Get_SystemRelativeTime, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_ = _hr
+	return _result
+}
+
+func (v *IDirect3D11CaptureFrame) Get_ContentSize() unsafe.Pointer {
+	var _result unsafe.Pointer
+	_hr, _, _ := syscall.SyscallN(v.Vtbl().Get_ContentSize, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_ = _hr
+	return _result
 }

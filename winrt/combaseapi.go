@@ -3,8 +3,8 @@ package winrt
 import (
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
 	"github.com/lxn/win"
+	"github.com/whiteboxsolutions/go-ole"
 	"golang.org/x/sys/windows"
 )
 

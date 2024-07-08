@@ -4,7 +4,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/go-ole/go-ole"
+	"github.com/whiteboxsolutions/go-ole"
 )
 
 var IMarshalID = ole.NewGUID("{00000003-0000-0000-C000-000000000046}")
