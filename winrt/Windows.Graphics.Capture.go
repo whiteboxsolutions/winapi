@@ -117,7 +117,7 @@ type IDirect3D11CaptureFramePool struct {
 type IDirect3D11CaptureFramePoolVtbl struct {
 	ole.IInspectableVtbl
 	Invoke               uintptr
-	counter              *int
+	Counter              *int
 	Recreate             uintptr
 	TryGetNextFrame      uintptr
 	add_FrameArrived     uintptr
@@ -133,9 +133,9 @@ func (v *IDirect3D11CaptureFramePool) UaddRef(lpMyObj *uintptr) uintptr {
 	}
 
 	var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-	*V.VTable().counter++
+	*V.VTable().Counter++
 
-	return uintptr(*V.VTable().counter)
+	return uintptr(*V.VTable().Counter)
 }
 
 var generatedDirect3D11CaptureFramePool = map[uintptr]*IDirect3D11CaptureFramePoolVtbl{}
@@ -147,9 +147,9 @@ func (v *IDirect3D11CaptureFramePool) Urelease(lpMyObj *uintptr) uintptr {
 	}
 
 	var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-	*V.VTable().counter--
+	*V.VTable().Counter--
 
-	if *V.VTable().counter == 0 {
+	if *V.VTable().Counter == 0 {
 		V.RawVTable = nil
 		_, ok := generatedDirect3D11CaptureFramePool[uintptr(unsafe.Pointer(lpMyObj))]
 		if ok {
@@ -159,7 +159,7 @@ func (v *IDirect3D11CaptureFramePool) Urelease(lpMyObj *uintptr) uintptr {
 		return 0
 	}
 
-	return uintptr(*V.VTable().counter)
+	return uintptr(*V.VTable().Counter)
 }
 
 func (v *IDirect3D11CaptureFramePool) UQueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
