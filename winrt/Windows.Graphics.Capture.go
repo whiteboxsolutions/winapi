@@ -2,6 +2,7 @@ package winrt
 
 import (
 	"errors"
+	"fmt"
 	"runtime"
 	"syscall"
 	"unsafe"
@@ -183,6 +184,7 @@ func (v *IDirect3D11CaptureFramePool) UQueryInterface(lpMyObj *uintptr, riid *ui
 		V.VTable()
 	}()
 	if err != nil {
+		fmt.Println("Invalid arguments in queryInterface: ", err.Error())
 		return win.E_INVALIDARG
 	}
 
