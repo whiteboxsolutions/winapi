@@ -329,27 +329,23 @@ func (v *IDirect3D11CaptureFrame) VTable() *IDirect3D11CaptureFrameVtbl {
 	return (*IDirect3D11CaptureFrameVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
-func (v *IDirect3D11CaptureFrame) Vtbl() *IDirect3D11CaptureFrameVtbl {
-	return (*IDirect3D11CaptureFrameVtbl)(unsafe.Pointer(v.IUnknown.LpVtbl))
-}
-
 func (v *IDirect3D11CaptureFrame) Get_Surface() unsafe.Pointer {
 	var _result unsafe.Pointer
-	_hr, _, _ := syscall.SyscallN(v.Vtbl().Get_Surface, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_hr, _, _ := syscall.SyscallN(v.VTable().Get_Surface, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
 	_ = _hr
 	return _result
 }
 
 func (v *IDirect3D11CaptureFrame) Get_SystemRelativeTime() TimeSpan {
 	var _result TimeSpan
-	_hr, _, _ := syscall.SyscallN(v.Vtbl().Get_SystemRelativeTime, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_hr, _, _ := syscall.SyscallN(v.VTable().Get_SystemRelativeTime, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
 	_ = _hr
 	return _result
 }
 
 func (v *IDirect3D11CaptureFrame) Get_ContentSize() unsafe.Pointer {
 	var _result unsafe.Pointer
-	_hr, _, _ := syscall.SyscallN(v.Vtbl().Get_ContentSize, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_hr, _, _ := syscall.SyscallN(v.VTable().Get_ContentSize, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
 	_ = _hr
 	return _result
 }
