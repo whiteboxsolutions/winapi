@@ -2,6 +2,7 @@ package winrt
 
 import (
 	"errors"
+	"runtime"
 	"syscall"
 	"unsafe"
 
@@ -109,17 +110,56 @@ var IDirect3D11CaptureFramePoolID = ole.NewGUID("{24EB6D22-1975-422E-82E7-780DBD
 
 type IDirect3D11CaptureFramePool struct {
 	ole.IInspectable
+	Invoke  uintptr
+	counter *int
 }
 
 type IDirect3D11CaptureFramePoolVtbl struct {
 	ole.IInspectableVtbl
 	Invoke               uintptr
+	counter              *int
 	Recreate             uintptr
 	TryGetNextFrame      uintptr
 	add_FrameArrived     uintptr
 	remove_FrameArrived  uintptr
 	CreateCaptureSession uintptr
 	get_DispatcherQueue  uintptr
+}
+
+func (v *IDirect3D11CaptureFramePool) UaddRef(lpMyObj *uintptr) uintptr {
+	// Validate input
+	if lpMyObj == nil {
+		return 0
+	}
+
+	var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
+	*V.VTable().counter++
+
+	return uintptr(*V.VTable().counter)
+}
+
+var generatedDirect3D11CaptureFramePool = map[uintptr]*IDirect3D11CaptureFramePoolVtbl{}
+
+func (v *IDirect3D11CaptureFramePool) Urelease(lpMyObj *uintptr) uintptr {
+	// Validate input
+	if lpMyObj == nil {
+		return 0
+	}
+
+	var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
+	*V.VTable().counter--
+
+	if *V.VTable().counter == 0 {
+		V.RawVTable = nil
+		_, ok := generatedDirect3D11CaptureFramePool[uintptr(unsafe.Pointer(lpMyObj))]
+		if ok {
+			delete(generatedDirect3D11CaptureFramePool, uintptr(unsafe.Pointer(lpMyObj)))
+			runtime.GC()
+		}
+		return 0
+	}
+
+	return uintptr(*V.VTable().counter)
 }
 
 func (v *IDirect3D11CaptureFramePool) UQueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
