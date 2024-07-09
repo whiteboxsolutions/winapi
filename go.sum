@@ -11,6 +11,8 @@ github.com/whiteboxsolutions/go-ole v1.0.3 h1:e3R64woy4rhwFhzNZXIpfa0ZeFs//+Mn5N
 github.com/whiteboxsolutions/go-ole v1.0.3/go.mod h1:xsWH4kRDWcVcbhfPKcXFt/62F3W3cVcnC9QA9W3vMig=
 github.com/whiteboxsolutions/go-ole v1.0.4 h1:59ap9hBWtl6rTNqnPjWaTYYhlnC3ysSh8ZYs4/rSB0g=
 github.com/whiteboxsolutions/go-ole v1.0.4/go.mod h1:xsWH4kRDWcVcbhfPKcXFt/62F3W3cVcnC9QA9W3vMig=
+github.com/whiteboxsolutions/go-ole v1.0.5 h1:L6BDOkTi+yK3Xj7W1/rW71PdURkWEfxbtCK8N6VpgAs=
+github.com/whiteboxsolutions/go-ole v1.0.5/go.mod h1:xsWH4kRDWcVcbhfPKcXFt/62F3W3cVcnC9QA9W3vMig=
 golang.org/x/sys v0.0.0-20190916202348-b4ddaad3f8a3/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20201018230417-eeed37f84f13/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.1.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
