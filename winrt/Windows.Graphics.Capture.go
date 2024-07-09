@@ -1,6 +1,7 @@
 package winrt
 
 import (
+	"errors"
 	"syscall"
 	"unsafe"
 
@@ -112,12 +113,53 @@ type IDirect3D11CaptureFramePool struct {
 
 type IDirect3D11CaptureFramePoolVtbl struct {
 	ole.IInspectableVtbl
+	Invoke               uintptr
 	Recreate             uintptr
 	TryGetNextFrame      uintptr
 	add_FrameArrived     uintptr
 	remove_FrameArrived  uintptr
 	CreateCaptureSession uintptr
 	get_DispatcherQueue  uintptr
+}
+
+func (v *IDirect3D11CaptureFramePool) UQueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
+	// Validate input
+	if lpMyObj == nil {
+		return win.E_INVALIDARG
+	}
+
+	var V = new(IDirect3D11CaptureFramePool)
+
+	var err error
+	// Check dereferencability
+	func() {
+		defer func() {
+			if recover() != nil {
+				err = errors.New("InvalidObject")
+			}
+		}()
+		// if object cannot be dereferenced, then panic occurs
+		*V = *(*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
+		V.VTable()
+	}()
+	if err != nil {
+		return win.E_INVALIDARG
+	}
+
+	*lppvObj = nil
+	var id = new(ole.GUID)
+	*id = *(*ole.GUID)(unsafe.Pointer(riid))
+
+	// Convert
+	switch id.String() {
+	case ole.IID_IUnknown.String(), ITypedEventHandlerID.String(), IAgileObjectID.String():
+		V.AddRef()
+		*lppvObj = (*uintptr)(unsafe.Pointer(V))
+
+		return win.S_OK
+	default:
+		return win.E_NOINTERFACE
+	}
 }
 
 func (v *IDirect3D11CaptureFramePool) VTable() *IDirect3D11CaptureFramePoolVtbl {
