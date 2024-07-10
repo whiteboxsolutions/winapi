@@ -173,12 +173,17 @@ type iD3D11InfoQueueVtbl struct {
 	SetMessageCountLimit                         uintptr
 	SetMuteDebugOutput                           uintptr
 }
+
 type iD3D11ResourceVtbl struct {
 	iD3D11DeviceChildVtbl
 
 	GetType             uintptr
 	SetEvictionPriority uintptr
 	GetEvictionPriority uintptr
+}
+
+type iD3D11Resource struct {
+	ole.IUnknown
 }
 
 type iD3D11Texture2DVtbl struct {
@@ -227,6 +232,10 @@ func reflectQueryInterface(self interface{}, method uintptr, interfaceID *w32.GU
 		objValue.Addr().Pointer())
 
 	return int32(hr)
+}
+
+func (v *iD3D11Resource) VTable() *iD3D11ResourceVtbl {
+	return (*iD3D11ResourceVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
 func (v *ID3D11Device) VTable() *ID3D11DeviceVtbl {
@@ -374,8 +383,44 @@ type ID3D11DeviceContextVtbl struct {
 	FinishCommandList                         uintptr
 }
 
+type D3D11_MAPPED_SUBRESOURCE struct {
+	PData      uintptr
+	RowPitch   uint32
+	DepthPitch uint32
+}
+
+type D3D11_MAP uint32
+
+const (
+	D3D11_MAP_READ               D3D11_MAP = 1
+	D3D11_MAP_WRITE              D3D11_MAP = 2
+	D3D11_MAP_READ_WRITE         D3D11_MAP = 3
+	D3D11_MAP_WRITE_DISCARD      D3D11_MAP = 4
+	D3D11_MAP_WRITE_NO_OVERWRITE D3D11_MAP = 5
+)
+
 func (v *ID3D11DeviceContext) VTable() *ID3D11DeviceContextVtbl {
 	return (*ID3D11DeviceContextVtbl)(unsafe.Pointer(v.RawVTable))
+}
+
+func (v *ID3D11DeviceContextVtbl) CopyResourceF(in *ID3D11Texture2D, out *ID3D11Texture2D) error {
+	r1, _, err := syscall.SyscallN(uintptr(v.CopyResource), uintptr(unsafe.Pointer(in)), uintptr(unsafe.Pointer(out)))
+	if r1 != win.S_OK {
+		return err
+	}
+	return nil
+}
+
+func (v *ID3D11DeviceContextVtbl) MapF(pResource *ID3D11Texture2D, subresource uintptr, mapType D3D11_MAP, mapFlags uintptr, pMappedResource *D3D11_MAPPED_SUBRESOURCE) error {
+	_, _, _ = syscall.SyscallN(
+		uintptr(v.Map),
+		uintptr(unsafe.Pointer(pResource)),
+		uintptr(subresource),
+		uintptr(mapType),
+		uintptr(mapFlags),
+		uintptr(unsafe.Pointer(pMappedResource)),
+	)
+	return nil
 }
 
 var pD3DCreateDevice = d3d11DLL.NewProc("D3D11CreateDevice")
