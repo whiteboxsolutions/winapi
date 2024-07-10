@@ -423,6 +423,15 @@ func (v *ID3D11DeviceContextVtbl) MapF(pResource *ID3D11Texture2D, subresource u
 	return nil
 }
 
+func (v *ID3D11DeviceContextVtbl) UnmapF(pResource *ID3D11Texture2D, subresource uintptr) error {
+	_, _, _ = syscall.SyscallN(
+		uintptr(v.Unmap),
+		uintptr(unsafe.Pointer(pResource)),
+		uintptr(subresource),
+	)
+	return nil
+}
+
 var pD3DCreateDevice = d3d11DLL.NewProc("D3D11CreateDevice")
 
 // CreateDevice
