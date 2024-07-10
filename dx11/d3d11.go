@@ -5,7 +5,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/gonutz/w32"
+	"github.com/gonutz/w32/v2"
 	"github.com/lxn/win"
 	"github.com/whiteboxsolutions/go-ole"
 	"golang.org/x/sys/windows"
