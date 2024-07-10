@@ -107,15 +107,11 @@ var Direct3D11CaptureFramePoolClass = "Windows.Graphics.Capture.Direct3D11Captur
 var IDirect3D11CaptureFramePoolID = ole.NewGUID("{24EB6D22-1975-422E-82E7-780DBD8DDF24}")
 
 type IDirect3D11CaptureFramePool struct {
-	ole.IInspectable
-	Invoke  uintptr
-	counter *int
+	ole.IUnknown
 }
 
 type IDirect3D11CaptureFramePoolVtbl struct {
 	ole.IInspectableVtbl
-	// Invoke               uintptr
-	// Counter              *int
 	Recreate             uintptr
 	TryGetNextFrame      uintptr
 	add_FrameArrived     uintptr
@@ -123,85 +119,6 @@ type IDirect3D11CaptureFramePoolVtbl struct {
 	CreateCaptureSession uintptr
 	get_DispatcherQueue  uintptr
 }
-
-// func (v *IDirect3D11CaptureFramePool) UaddRef(lpMyObj *uintptr) uintptr {
-// 	// Validate input
-// 	// if lpMyObj == nil {
-// 	// 	return 0
-// 	// }
-
-// 	// var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-// 	// *V.VTable().Counter++
-
-// 	// return uintptr(*V.VTable().Counter)
-// 	return 0
-// }
-
-// var generatedDirect3D11CaptureFramePool = map[uintptr]*IDirect3D11CaptureFramePoolVtbl{}
-
-// func (v *IDirect3D11CaptureFramePool) Urelease(lpMyObj *uintptr) uintptr {
-// 	// Validate input
-// 	// if lpMyObj == nil {
-// 	// 	return 0
-// 	// }
-
-// 	// var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-// 	// *V.VTable().Counter--
-
-// 	// if *V.VTable().Counter == 0 {
-// 	// 	V.RawVTable = nil
-// 	// 	_, ok := generatedDirect3D11CaptureFramePool[uintptr(unsafe.Pointer(lpMyObj))]
-// 	// 	if ok {
-// 	// 		delete(generatedDirect3D11CaptureFramePool, uintptr(unsafe.Pointer(lpMyObj)))
-// 	// 		runtime.GC()
-// 	// 	}
-// 	// 	return 0
-// 	// }
-
-// 	// return uintptr(*V.VTable().Counter)
-// 	return 0
-// }
-
-// func (v *IDirect3D11CaptureFramePool) QueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
-// 	// Validate input
-// 	if lpMyObj == nil {
-// 		return win.E_INVALIDARG
-// 	}
-
-// 	var V = new(IDirect3D11CaptureFramePool)
-
-// 	var err error
-// 	// Check dereferencability
-// 	func() {
-// 		defer func() {
-// 			if recover() != nil {
-// 				err = errors.New("InvalidObject")
-// 			}
-// 		}()
-// 		// if object cannot be dereferenced, then panic occurs
-// 		*V = *(*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-// 		V.VTable()
-// 	}()
-// 	if err != nil {
-// 		fmt.Println("Invalid arguments in queryInterface: ", err.Error())
-// 		return win.E_INVALIDARG
-// 	}
-
-// 	*lppvObj = nil
-// 	var id = new(ole.GUID)
-// 	*id = *(*ole.GUID)(unsafe.Pointer(riid))
-
-// 	// Convert
-// 	switch id.String() {
-// 	case ole.IID_IUnknown.String(), ITypedEventHandlerID.String(), IAgileObjectID.String():
-// 		V.AddRef()
-// 		*lppvObj = (*uintptr)(unsafe.Pointer(V))
-
-// 		return win.S_OK
-// 	default:
-// 		return win.E_NOINTERFACE
-// 	}
-// }
 
 func (v *IDirect3D11CaptureFramePool) VTable() *IDirect3D11CaptureFramePoolVtbl {
 	return (*IDirect3D11CaptureFramePoolVtbl)(unsafe.Pointer(v.RawVTable))
