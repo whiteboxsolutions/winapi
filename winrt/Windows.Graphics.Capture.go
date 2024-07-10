@@ -140,7 +140,7 @@ eventHandler:
 */
 func (v *IDirect3D11CaptureFramePool) AddFrameArrived(eventHandler unsafe.Pointer) (*EventRegistrationToken, error) {
 	var token EventRegistrationToken
-
+	fmt.Println("In AddFrameArrived")
 	fmt.Println("Frame Arrived: ", v.VTable().add_FrameArrived)
 	r1, _, _ := syscall.SyscallN(v.VTable().add_FrameArrived, uintptr(unsafe.Pointer(v)), uintptr(eventHandler), uintptr(unsafe.Pointer(&token.value)))
 	if r1 != win.S_OK {
