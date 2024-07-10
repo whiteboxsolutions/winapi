@@ -3,7 +3,6 @@ package winrt
 import (
 	"errors"
 	"fmt"
-	"runtime"
 	"syscall"
 	"unsafe"
 
@@ -117,8 +116,8 @@ type IDirect3D11CaptureFramePool struct {
 
 type IDirect3D11CaptureFramePoolVtbl struct {
 	ole.IInspectableVtbl
-	Invoke               uintptr
-	Counter              *int
+	// Invoke               uintptr
+	// Counter              *int
 	Recreate             uintptr
 	TryGetNextFrame      uintptr
 	add_FrameArrived     uintptr
@@ -129,38 +128,40 @@ type IDirect3D11CaptureFramePoolVtbl struct {
 
 func (v *IDirect3D11CaptureFramePool) UaddRef(lpMyObj *uintptr) uintptr {
 	// Validate input
-	if lpMyObj == nil {
-		return 0
-	}
+	// if lpMyObj == nil {
+	// 	return 0
+	// }
 
-	var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-	*V.VTable().Counter++
+	// var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
+	// *V.VTable().Counter++
 
-	return uintptr(*V.VTable().Counter)
+	// return uintptr(*V.VTable().Counter)
+	return 0
 }
 
 var generatedDirect3D11CaptureFramePool = map[uintptr]*IDirect3D11CaptureFramePoolVtbl{}
 
 func (v *IDirect3D11CaptureFramePool) Urelease(lpMyObj *uintptr) uintptr {
 	// Validate input
-	if lpMyObj == nil {
-		return 0
-	}
+	// if lpMyObj == nil {
+	// 	return 0
+	// }
 
-	var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-	*V.VTable().Counter--
+	// var V = (*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
+	// *V.VTable().Counter--
 
-	if *V.VTable().Counter == 0 {
-		V.RawVTable = nil
-		_, ok := generatedDirect3D11CaptureFramePool[uintptr(unsafe.Pointer(lpMyObj))]
-		if ok {
-			delete(generatedDirect3D11CaptureFramePool, uintptr(unsafe.Pointer(lpMyObj)))
-			runtime.GC()
-		}
-		return 0
-	}
+	// if *V.VTable().Counter == 0 {
+	// 	V.RawVTable = nil
+	// 	_, ok := generatedDirect3D11CaptureFramePool[uintptr(unsafe.Pointer(lpMyObj))]
+	// 	if ok {
+	// 		delete(generatedDirect3D11CaptureFramePool, uintptr(unsafe.Pointer(lpMyObj)))
+	// 		runtime.GC()
+	// 	}
+	// 	return 0
+	// }
 
-	return uintptr(*V.VTable().Counter)
+	// return uintptr(*V.VTable().Counter)
+	return 0
 }
 
 func (v *IDirect3D11CaptureFramePool) UQueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
