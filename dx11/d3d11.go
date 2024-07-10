@@ -90,7 +90,7 @@ type _DXGI_SAMPLE_DESC struct {
 	Quality uint32
 }
 
-type _D3D11_TEXTURE2D_DESC struct {
+type D3D11_TEXTURE2D_DESC struct {
 	Width          uint32
 	Height         uint32
 	MipLevels      uint32
@@ -191,7 +191,7 @@ type ID3D11Texture2D struct {
 	vtbl *iD3D11Texture2DVtbl
 }
 
-func (obj *ID3D11Texture2D) GetDesc(desc *_D3D11_TEXTURE2D_DESC) int32 {
+func (obj *ID3D11Texture2D) GetDesc(desc *D3D11_TEXTURE2D_DESC) int32 {
 	ret, _, _ := syscall.SyscallN(
 		obj.vtbl.GetDesc,
 		2,
@@ -233,7 +233,7 @@ func (v *ID3D11Device) VTable() *ID3D11DeviceVtbl {
 	return (*ID3D11DeviceVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
-func (obj *ID3D11Device) CreateTexture2D(desc *_D3D11_TEXTURE2D_DESC, ppTexture2D **ID3D11Texture2D) int32 {
+func (obj *ID3D11Device) CreateTexture2D(desc *D3D11_TEXTURE2D_DESC, ppTexture2D **ID3D11Texture2D) int32 {
 	ret, _, _ := syscall.SyscallN(
 		obj.VTable().CreateTexture2D,
 		4,
