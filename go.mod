@@ -10,4 +10,7 @@ require (
 	golang.org/x/sys v0.22.0
 )
 
-require github.com/go-ole/go-ole v1.3.0 // indirect
+require (
+	github.com/go-ole/go-ole v1.3.0 // indirect
+	github.com/gonutz/w32 v1.0.0 // indirect
+)

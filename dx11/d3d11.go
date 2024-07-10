@@ -1,9 +1,11 @@
 package dx11
 
 import (
+	"reflect"
 	"syscall"
 	"unsafe"
 
+	"github.com/gonutz/w32"
 	"github.com/lxn/win"
 	"github.com/whiteboxsolutions/go-ole"
 	"golang.org/x/sys/windows"
@@ -79,8 +81,170 @@ type ID3D11DeviceVtbl struct {
 	GetExceptionMode                     uintptr
 }
 
+type _D3D11_BOX struct {
+	Left, Top, Front, Right, Bottom, Back uint32
+}
+
+type _DXGI_SAMPLE_DESC struct {
+	Count   uint32
+	Quality uint32
+}
+
+type _D3D11_TEXTURE2D_DESC struct {
+	Width          uint32
+	Height         uint32
+	MipLevels      uint32
+	ArraySize      uint32
+	Format         uint32
+	SampleDesc     _DXGI_SAMPLE_DESC
+	Usage          uint32
+	BindFlags      uint32
+	CPUAccessFlags uint32
+	MiscFlags      uint32
+}
+
+type iD3D11DebugVtbl struct {
+	iUnknownVtbl
+
+	SetFeatureMask             uintptr
+	GetFeatureMask             uintptr
+	SetPresentPerRenderOpDelay uintptr
+	GetPresentPerRenderOpDelay uintptr
+	SetSwapChain               uintptr
+	GetSwapChain               uintptr
+	ValidateContext            uintptr
+	ReportLiveDeviceObjects    uintptr
+	ValidateContextForDispatch uintptr
+}
+
+type iUnknownVtbl struct {
+	// every COM object starts with these three
+	QueryInterface uintptr
+	AddRef         uintptr
+	Release        uintptr
+	// _QueryInterface2 uintptr
+}
+
+type iD3D11DeviceChildVtbl struct {
+	iUnknownVtbl
+
+	GetDevice               uintptr
+	GetPrivateData          uintptr
+	SetPrivateData          uintptr
+	SetPrivateDataInterface uintptr
+}
+
+type iD3D11InfoQueueVtbl struct {
+	iUnknownVtbl
+
+	AddApplicationMessage                        uintptr
+	AddMessage                                   uintptr
+	AddRetrievalFilterEntries                    uintptr
+	AddStorageFilterEntries                      uintptr
+	ClearRetrievalFilter                         uintptr
+	ClearStorageFilter                           uintptr
+	ClearStoredMessages                          uintptr
+	GetBreakOnCategory                           uintptr
+	GetBreakOnID                                 uintptr
+	GetBreakOnSeverity                           uintptr
+	GetMessage                                   uintptr
+	GetMessageCountLimit                         uintptr
+	GetMuteDebugOutput                           uintptr
+	GetNumMessagesAllowedByStorageFilter         uintptr
+	GetNumMessagesDeniedByStorageFilter          uintptr
+	GetNumMessagesDiscardedByMessageCountLimit   uintptr
+	GetNumStoredMessages                         uintptr
+	GetNumStoredMessagesAllowedByRetrievalFilter uintptr
+	GetRetrievalFilter                           uintptr
+	GetRetrievalFilterStackSize                  uintptr
+	GetStorageFilter                             uintptr
+	GetStorageFilterStackSize                    uintptr
+	PopRetrievalFilter                           uintptr
+	PopStorageFilter                             uintptr
+	PushCopyOfRetrievalFilter                    uintptr
+	PushCopyOfStorageFilter                      uintptr
+	PushEmptyRetrievalFilter                     uintptr
+	PushEmptyStorageFilter                       uintptr
+	PushRetrievalFilter                          uintptr
+	PushStorageFilter                            uintptr
+	SetBreakOnCategory                           uintptr
+	SetBreakOnID                                 uintptr
+	SetBreakOnSeverity                           uintptr
+	SetMessageCountLimit                         uintptr
+	SetMuteDebugOutput                           uintptr
+}
+type iD3D11ResourceVtbl struct {
+	iD3D11DeviceChildVtbl
+
+	GetType             uintptr
+	SetEvictionPriority uintptr
+	GetEvictionPriority uintptr
+}
+
+type iD3D11Texture2DVtbl struct {
+	iD3D11ResourceVtbl
+
+	GetDesc uintptr
+}
+
+type ID3D11Texture2D struct {
+	vtbl *iD3D11Texture2DVtbl
+}
+
+func (obj *ID3D11Texture2D) GetDesc(desc *_D3D11_TEXTURE2D_DESC) int32 {
+	ret, _, _ := syscall.SyscallN(
+		obj.vtbl.GetDesc,
+		2,
+		uintptr(unsafe.Pointer(obj)),
+		uintptr(unsafe.Pointer(desc)),
+		0,
+	)
+	return int32(ret)
+}
+func (obj *ID3D11Texture2D) Release() int32 {
+	ret, _, _ := syscall.SyscallN(
+		obj.vtbl.Release,
+		1,
+		uintptr(unsafe.Pointer(obj)),
+		0,
+		0,
+	)
+	return int32(ret)
+}
+func (obj *ID3D11Texture2D) QueryInterface(iid w32.GUID, pp interface{}) int32 {
+	return reflectQueryInterface(obj, obj.vtbl.QueryInterface, &iid, pp)
+}
+
+func reflectQueryInterface(self interface{}, method uintptr, interfaceID *w32.GUID, obj interface{}) int32 {
+	selfValue := reflect.ValueOf(self).Elem()
+	objValue := reflect.ValueOf(obj).Elem()
+
+	hr, _, _ := syscall.SyscallN(
+		method,
+		3,
+		selfValue.UnsafeAddr(),
+		uintptr(unsafe.Pointer(interfaceID)),
+		objValue.Addr().Pointer())
+
+	return int32(hr)
+}
+
 func (v *ID3D11Device) VTable() *ID3D11DeviceVtbl {
 	return (*ID3D11DeviceVtbl)(unsafe.Pointer(v.RawVTable))
+}
+
+func (obj *ID3D11Device) CreateTexture2D(desc *_D3D11_TEXTURE2D_DESC, ppTexture2D **ID3D11Texture2D) int32 {
+	ret, _, _ := syscall.SyscallN(
+		obj.VTable().CreateTexture2D,
+		4,
+		uintptr(unsafe.Pointer(obj)),
+		uintptr(unsafe.Pointer(desc)),
+		0,
+		uintptr(unsafe.Pointer(ppTexture2D)),
+		0,
+		0,
+	)
+	return int32(ret)
 }
 
 func (v *ID3D11Device) GetImmediateContext() (pImmediateContext *ID3D11DeviceContext) {
