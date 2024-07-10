@@ -1,6 +1,7 @@
 package winrt
 
 import (
+	"fmt"
 	"syscall"
 	"unsafe"
 
@@ -121,6 +122,8 @@ type IDirect3D11CaptureFramePoolVtbl struct {
 }
 
 func (v *IDirect3D11CaptureFramePool) VTable() *IDirect3D11CaptureFramePoolVtbl {
+	fmt.Println("Raw VTable: ")
+	fmt.Println(v.RawVTable)
 	return (*IDirect3D11CaptureFramePoolVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
@@ -139,8 +142,10 @@ func (v *IDirect3D11CaptureFramePool) AddFrameArrived(eventHandler unsafe.Pointe
 	var token EventRegistrationToken
 	r1, _, _ := syscall.SyscallN(v.VTable().add_FrameArrived, uintptr(unsafe.Pointer(v)), uintptr(eventHandler), uintptr(unsafe.Pointer(&token.value)))
 	if r1 != win.S_OK {
+		fmt.Println("Not S_OK in AddFrameArrived")
 		return nil, ole.NewError(r1)
 	}
+	fmt.Println(token)
 	return &token, nil
 }
 
