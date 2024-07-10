@@ -1,8 +1,6 @@
 package winrt
 
 import (
-	"errors"
-	"fmt"
 	"syscall"
 	"unsafe"
 
@@ -164,46 +162,46 @@ type IDirect3D11CaptureFramePoolVtbl struct {
 // 	return 0
 // }
 
-func (v *IDirect3D11CaptureFramePool) QueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
-	// Validate input
-	if lpMyObj == nil {
-		return win.E_INVALIDARG
-	}
+// func (v *IDirect3D11CaptureFramePool) QueryInterface(lpMyObj *uintptr, riid *uintptr, lppvObj **uintptr) uintptr {
+// 	// Validate input
+// 	if lpMyObj == nil {
+// 		return win.E_INVALIDARG
+// 	}
 
-	var V = new(IDirect3D11CaptureFramePool)
+// 	var V = new(IDirect3D11CaptureFramePool)
 
-	var err error
-	// Check dereferencability
-	func() {
-		defer func() {
-			if recover() != nil {
-				err = errors.New("InvalidObject")
-			}
-		}()
-		// if object cannot be dereferenced, then panic occurs
-		*V = *(*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
-		V.VTable()
-	}()
-	if err != nil {
-		fmt.Println("Invalid arguments in queryInterface: ", err.Error())
-		return win.E_INVALIDARG
-	}
+// 	var err error
+// 	// Check dereferencability
+// 	func() {
+// 		defer func() {
+// 			if recover() != nil {
+// 				err = errors.New("InvalidObject")
+// 			}
+// 		}()
+// 		// if object cannot be dereferenced, then panic occurs
+// 		*V = *(*IDirect3D11CaptureFramePool)(unsafe.Pointer(lpMyObj))
+// 		V.VTable()
+// 	}()
+// 	if err != nil {
+// 		fmt.Println("Invalid arguments in queryInterface: ", err.Error())
+// 		return win.E_INVALIDARG
+// 	}
 
-	*lppvObj = nil
-	var id = new(ole.GUID)
-	*id = *(*ole.GUID)(unsafe.Pointer(riid))
+// 	*lppvObj = nil
+// 	var id = new(ole.GUID)
+// 	*id = *(*ole.GUID)(unsafe.Pointer(riid))
 
-	// Convert
-	switch id.String() {
-	case ole.IID_IUnknown.String(), ITypedEventHandlerID.String(), IAgileObjectID.String():
-		V.AddRef()
-		*lppvObj = (*uintptr)(unsafe.Pointer(V))
+// 	// Convert
+// 	switch id.String() {
+// 	case ole.IID_IUnknown.String(), ITypedEventHandlerID.String(), IAgileObjectID.String():
+// 		V.AddRef()
+// 		*lppvObj = (*uintptr)(unsafe.Pointer(V))
 
-		return win.S_OK
-	default:
-		return win.E_NOINTERFACE
-	}
-}
+// 		return win.S_OK
+// 	default:
+// 		return win.E_NOINTERFACE
+// 	}
+// }
 
 func (v *IDirect3D11CaptureFramePool) VTable() *IDirect3D11CaptureFramePoolVtbl {
 	return (*IDirect3D11CaptureFramePoolVtbl)(unsafe.Pointer(v.RawVTable))
