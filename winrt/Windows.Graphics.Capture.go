@@ -448,12 +448,34 @@ type IDirect3D11CaptureFrameVtbl struct {
 	Get_ContentSize        uintptr
 }
 
+type IDirect3D11Surface struct {
+	ole.IUnknown
+}
+
+type IDirect3D11SurfaceVtbl struct {
+	ole.IUnknownVtbl
+	Description uintptr
+	Dispose     uintptr
+}
+
+type IDirect3DSurfaceDescription struct {
+	Format                 DirectXPixelFormat
+	Height                 int
+	MultisampleDescription Direct3DMultisampleDescription
+	Width                  int
+}
+
+type Direct3DMultisampleDescription struct {
+	Count   int
+	Quality int
+}
+
 func (v *IDirect3D11CaptureFrame) VTable() *IDirect3D11CaptureFrameVtbl {
 	return (*IDirect3D11CaptureFrameVtbl)(unsafe.Pointer(v.RawVTable))
 }
 
-func (v *IDirect3D11CaptureFrame) Get_Surface() unsafe.Pointer {
-	var _result unsafe.Pointer
+func (v *IDirect3D11CaptureFrame) Get_Surface() IDirect3D11Surface {
+	var _result IDirect3D11Surface
 	_hr, _, _ := syscall.SyscallN(v.VTable().Get_Surface, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
 	_ = _hr
 	return _result
@@ -469,6 +491,17 @@ func (v *IDirect3D11CaptureFrame) Get_SystemRelativeTime() TimeSpan {
 func (v *IDirect3D11CaptureFrame) Get_ContentSize() unsafe.Pointer {
 	var _result unsafe.Pointer
 	_hr, _, _ := syscall.SyscallN(v.VTable().Get_ContentSize, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
+	_ = _hr
+	return _result
+}
+
+func (v *IDirect3D11Surface) VTable() *IDirect3D11SurfaceVtbl {
+	return (*IDirect3D11SurfaceVtbl)(unsafe.Pointer(v.RawVTable))
+}
+
+func (v *IDirect3D11Surface) Get_Description() IDirect3DSurfaceDescription {
+	var _result IDirect3DSurfaceDescription
+	_hr, _, _ := syscall.SyscallN(v.VTable().Description, uintptr(unsafe.Pointer(v)), uintptr(unsafe.Pointer(&_result)))
 	_ = _hr
 	return _result
 }
